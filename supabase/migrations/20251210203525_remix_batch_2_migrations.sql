@@ -1,3 +1,5 @@
+
+-- Migration: 20251023150641
 -- Create products table
 CREATE TABLE public.products (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -51,3 +53,14 @@ CREATE TRIGGER update_products_updated_at
 BEFORE UPDATE ON public.products
 FOR EACH ROW
 EXECUTE FUNCTION public.update_updated_at_column();
+
+-- Migration: 20251023150746
+-- Fix security warning: Set search_path on update_updated_at_column function
+CREATE OR REPLACE FUNCTION public.update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = now();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql
+SET search_path = public;
