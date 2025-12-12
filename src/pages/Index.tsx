@@ -540,9 +540,11 @@ const Index = () => {
               </p>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {products.map((product) => {
-                const imageName = product.image_url?.split('/').pop() || '';
-                const productImage = productImages[imageName] || product1;
+            {products.map((product) => {
+                // Support external URLs, fallback to local assets
+                const productImage = product.image_url?.startsWith('http') 
+                  ? product.image_url 
+                  : (productImages[product.image_url?.split('/').pop() || ''] || product1);
                 
                 return (
                   <Card key={product.id} className="glass-card overflow-hidden group hover-lift border-0">

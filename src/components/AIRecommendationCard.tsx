@@ -46,6 +46,11 @@ interface AIRecommendationCardProps {
 
 const getProductImage = (imageUrl: string | undefined): string => {
   if (!imageUrl) return product1;
+  // Support external URLs (http/https)
+  if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
+    return imageUrl;
+  }
+  // Fallback to local assets
   const imageName = imageUrl.split('/').pop() || '';
   return productImages[imageName] || product1;
 };
